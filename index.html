@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>RideSync</title>
+
+    <!-- RideSync CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+</head>
+
+
+<body>
+
+    <h1>🚌 RIDESYNC</h1>
+
+    <h2>College Bus Tracking</h2>
+
+
+    <!-- ========================= -->
+    <!-- BUS 1 -->
+    <!-- ========================= -->
+
+    <div class="bus-card">
+
+        <h3>🚌 Bus 1</h3>
+
+        <p>
+            Doddaballapur → Primus College
+        </p>
+
+
+        <button onclick="showBus1Route()">
+            View Route
+        </button>
+
+
+        <div id="bus1Route"></div>
+
+
+        <hr>
+
+
+        <h4>📍 Bus Status</h4>
+
+        <p>
+            <strong>Status:</strong>
+            <span id="bus1Status">
+                Ready to Track
+            </span>
+        </p>
+
+        <p>
+            <strong>Current Stop:</strong>
+            <span id="bus1CurrentStop">
+                Not available
+            </span>
+        </p>
+
+        <p>
+            <strong>ETA:</strong>
+            <span id="bus1Eta">
+                --
+            </span>
+        </p>
+
+        <p>
+            <strong>Next Stop:</strong>
+            <span id="bus1NextStop">
+                Not available
+            </span>
+        </p>
+
+
+        <h4>🗺️ Bus 1 Live Map</h4>
+
+        <div id="bus1Map"
+             style="height: 300px; width: 100%;">
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- BUS 2 -->
+    <!-- ========================= -->
+
+    <div class="bus-card">
+
+        <h3>🚌 Bus 2</h3>
+
+        <p>
+            Yelahanka → Primus College
+        </p>
+
+
+        <button onclick="showBus2Route()">
+            View Route
+        </button>
+
+
+        <div id="bus2Route"></div>
+
+
+        <hr>
+
+
+        <h4>📍 Bus Status</h4>
+
+        <p>
+            <strong>Status:</strong>
+            <span id="bus2Status">
+                Ready to Track
+            </span>
+        </p>
+
+        <p>
+            <strong>Current Stop:</strong>
+            <span id="bus2CurrentStop">
+                Not available
+            </span>
+        </p>
+
+        <p>
+            <strong>ETA:</strong>
+            <span id="bus2Eta">
+                --
+            </span>
+        </p>
+
+        <p>
+            <strong>Next Stop:</strong>
+            <span id="bus2NextStop">
+                Not available
+            </span>
+        </p>
+
+
+        <h4>🗺️ Bus 2 Live Map</h4>
+
+        <div id="bus2Map"
+             style="height: 300px; width: 100%;">
+        </div>
+
+    </div>
+
+
+
+    <!-- Leaflet Map JavaScript -->
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+
+
+    <!-- RideSync JavaScript -->
+
+    <script
+        src="{{ url_for('static', filename='script.js') }}">
+    </script>
+
+
+</body>
+
+</html>
+
+Now do this:
+
+1. Open "index.html"
+2. Press Ctrl + A
+3. Press Delete
+4. Paste the complete code above
+5. Press Ctrl + S
+
+Don't change "script.js" yet.
+
+Type Done after saving.
