@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RideSync - Multiple Bus Tracking</title>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .header {
+            background: #1976d2;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .info {
+            margin-top: 15px;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 12px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="header">
+
+        <h1>🚌 RideSync</h1>
+
+        <p>Live College Bus Tracking System</p>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="card">
+
+            <h2>Select Bus</h2>
+
+            <select id="busSelect">
+
+                <option value="">
+                    -- Select Bus --
+                </option>
+
+                <option value="bus1">
+                    Bus 1
+                </option>
+
+                <option value="bus2">
+                    Bus 2
+                </option>
+
+                <option value="bus3">
+                    Bus 3
+                </option>
+
+            </select>
+
+
+            <div class="info">
+
+                📍 Status:
+                <strong id="status">Waiting...</strong>
+
+                <br>
+
+                🚏 Current Stop:
+                <strong id="currentStop">--</strong>
+
+                <br>
+
+                🛑 Next Stop:
+                <strong id="nextStop">--</strong>
+
+                <br>
+
+                ⏱️ ETA:
+                <strong id="eta">--</strong> minutes
+
+                <br>
+
+                🌐 Latitude:
+                <strong id="latitude">--</strong>
+
+                <br>
+
+                🌐 Longitude:
+                <strong id="longitude">--</strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>🗺️ Live Bus Location</h2>
+
+            <div id="map"></div>
+
+        </div>
+
+    </div>
+
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+    <script>
+
+        var map = L.map("map").setView(
+            [12.9716, 77.5946],
+            13
+        );
+
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution:
+                    "&copy; OpenStreetMap contributors"
+            }
+        ).addTo(map);
+
+
+        // Bus icon
+
+        var busIcon = L.divIcon({
+
+            html: "🚌",
+
+            className: "",
+
+            iconSize: [40, 40]
+
+        });
+
+
+        // Bus marker
+
+        var busMarker = L.marker(
+
+            [12.9716, 77.5946],
+
+            {
+                icon: busIcon
+            }
+
+        ).addTo(map);
+
+
+        busMarker.bindPopup(
+            "🚌 RideSync Bus"
+        );
+
+
+        // Selected bus
+
+        var selectedBus = "";
+
+
+        // Bus selection
+
+        document.getElementById("busSelect")
+            .addEventListener(
+                "change",
+                function () {
+
+                    selectedBus = this.value;
+
+                    if (selectedBus === "") {
+
+                        document.getElementById(
+                            "status"
+                        ).innerText = "Waiting...";
+
+                        return;
+
+                    }
+
+
+                    document.getElementById(
+                        "status"
+                    ).innerText =
+                        this.options[
+                            this.selectedIndex
+                        ].text + " connected";
+
+                }
+            );
+
+
+        // Get bus information
+
+        function getBusLocation() {
+
+            if (selectedBus === "") {
+                return;
+            }
+
+
+            fetch(
+                "/api/bus-location?bus=" +
+                selectedBus
+            )
+
+            .then(function(response) {
+
+                return response.json();
+
+            })
+
+            .then(function(data) {
+
+                // Move bus
+
+                busMarker.setLatLng([
+
+                    data.latitude,
+
+                    data.longitude
+
+                ]);
+
+
+                // Center map
+
+                map.panTo([
+
+                    data.latitude,
+
+                    data.longitude
+
+                ]);
+
+
+                // Update information
+
+                document.getElementById(
+                    "currentStop"
+                ).innerText =
+                    data.current_stop;
+
+
+                document.getElementById(
+                    "nextStop"
+                ).innerText =
+                    data.next_stop;
+
+
+                document.getElementById(
+                    "eta"
+                ).innerText =
+                    data.eta;
+
+
+                document.getElementById(
+                    "latitude"
+                ).innerText =
+                    data.latitude;
+
+
+                document.getElementById(
+                    "longitude"
+                ).innerText =
+                    data.longitude;
+
+            })
+
+            .catch(function(error) {
+
+                console.log(
+                    "Error:",
+                    error
+                );
+
+            });
+
+        }
+
+
+        // Update every 2 seconds
+
+        setInterval(
+            getBusLocation,
+            2000
+        );
+
+    </script>
+
+</body>
+
+</html>

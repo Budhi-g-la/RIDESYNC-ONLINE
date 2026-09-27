@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>RideSync - College Bus Tracking</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .header {
+            background: #1976d2;
+            color: white;
+            text-align: center;
+            padding: 35px 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 38px;
+        }
+
+        .header p {
+            font-size: 18px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            padding: 50px 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .bus {
+            font-size: 75px;
+        }
+
+        .card h2 {
+            font-size: 27px;
+        }
+
+        .card p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .track-button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            background: #1976d2;
+            color: white;
+            font-size: 19px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .track-button:hover {
+            background: #125aa0;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="header">
+
+        <h1>RideSync</h1>
+
+        <p>College Bus Tracking System</p>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="card">
+
+            <div class="bus">🚌</div>
+
+            <h2>Welcome to RideSync</h2>
+
+            <p>
+                Track your college bus in real time
+                and view its current location.
+            </p>
+
+            <button class="track-button"
+             onclick="window.location.href='/track'">
+               Track Bus
+            </button>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

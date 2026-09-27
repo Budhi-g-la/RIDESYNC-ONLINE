@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>RideSync - Driver</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .header {
+            background: #1976d2;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin: 10px 0 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #1976d2;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .info {
+            margin-top: 20px;
+            font-size: 17px;
+            line-height: 2;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="header">
+
+        <h1>🚌 RideSync</h1>
+
+        <p>Driver Location Sharing</p>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="card">
+
+            <h2>Driver Panel</h2>
+
+            <label>Select Bus</label>
+
+            <select id="busSelect">
+
+                <option value="bus1">
+                    Bus 1
+                </option>
+
+                <option value="bus2">
+                    Bus 2
+                </option>
+
+                <option value="bus3">
+                    Bus 3
+                </option>
+
+            </select>
+
+
+            <button onclick="startTracking()">
+
+                📍 Start GPS Tracking
+
+            </button>
+
+
+            <div class="info">
+
+                Status:
+                <strong id="status">
+                    Not Started
+                </strong>
+
+                <br>
+
+                Latitude:
+                <strong id="latitude">
+                    --
+                </strong>
+
+                <br>
+
+                Longitude:
+                <strong id="longitude">
+                    --
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        var tracking = false;
+
+
+        function startTracking() {
+
+            if (!navigator.geolocation) {
+
+                alert(
+                    "GPS is not supported by this device."
+                );
+
+                return;
+
+            }
+
+
+            tracking = true;
+
+
+            document.getElementById(
+                "status"
+            ).innerText =
+                "GPS Tracking Started";
+
+
+            navigator.geolocation.watchPosition(
+
+                function(position) {
+
+                    var latitude =
+                        position.coords.latitude;
+
+                    var longitude =
+                        position.coords.longitude;
+
+
+                    document.getElementById(
+                        "latitude"
+                    ).innerText =
+                        latitude;
+
+
+                    document.getElementById(
+                        "longitude"
+                    ).innerText =
+                        longitude;
+
+
+                    // Send GPS location to Python
+
+                    var busId =
+                        document.getElementById(
+                            "busSelect"
+                        ).value;
+
+
+                    fetch(
+                        "/api/update-location",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                bus_id: busId,
+
+                                latitude: latitude,
+
+                                longitude: longitude
+
+                            })
+
+                        }
+                    );
+
+                },
+
+
+                function(error) {
+
+                    document.getElementById(
+                        "status"
+                    ).innerText =
+                        "GPS Error: " +
+                        error.message;
+
+                },
+
+                {
+
+                    enableHighAccuracy: true,
+
+                    maximumAge: 0,
+
+                    timeout: 10000
+
+                }
+
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>
